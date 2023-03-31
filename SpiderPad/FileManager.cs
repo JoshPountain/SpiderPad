@@ -28,8 +28,18 @@ namespace SpiderPad
             //conn.ConnectionString = @"Data Source=DESKTOP-O46OL9Q;Initial Catalog=Demodb;";
             //conn.ConnectionString = @"Database=[C:\USERS\JOSH\DOCUMENTS\CODE\GITHUBPROJECTS\SPIDERPAD\SPIDERPAD\COMPONENTS.MDF];Trusted_Connection=true";
             conn.Open();
-            SqlCommand command = new SqlCommand("SELECT * FROM Layers", conn);
+            SqlCommand command = new SqlCommand("SELECT * FROM Layers WHERE LayerUID=3", conn);
+            SqlCommand add = new SqlCommand("INSERT INTO [dbo].[Layers] ([LayerUID], [Tab3Link], [Position]) VALUES (3, N'DataLad  ', 4)", conn);
+            
+            SqlDataAdapter adapter = new SqlDataAdapter();
+            adapter.InsertCommand = add;
+            adapter.InsertCommand.ExecuteNonQuery();
             SqlDataReader reader = command.ExecuteReader();
+            reader.Read();
+            string s =reader.GetString(1).ToString();
+            reader.Read();
+            string s2 = reader.GetString(1).ToString();
+            int i = reader.GetInt32(0);
             return "Hello";
         }
 
