@@ -1,0 +1,12 @@
+C:\Users\Josh\Documents\Code\GithubProjects\Spiderpad\SpiderPad\bin\Debug\SpiderPad.exe.config
+C:\Users\Josh\Documents\Code\GithubProjects\Spiderpad\SpiderPad\bin\Debug\SpiderPad.exe
+C:\Users\Josh\Documents\Code\GithubProjects\Spiderpad\SpiderPad\bin\Debug\SpiderPad.pdb
+C:\Users\Josh\Documents\Code\GithubProjects\Spiderpad\SpiderPad\obj\Debug\SpiderPad.csproj.AssemblyReference.cache
+C:\Users\Josh\Documents\Code\GithubProjects\Spiderpad\SpiderPad\obj\Debug\SpiderPad.csproj.SuggestedBindingRedirects.cache
+C:\Users\Josh\Documents\Code\GithubProjects\Spiderpad\SpiderPad\obj\Debug\SpiderPad.Form1.resources
+C:\Users\Josh\Documents\Code\GithubProjects\Spiderpad\SpiderPad\obj\Debug\SpiderPad.mainPad.resources
+C:\Users\Josh\Documents\Code\GithubProjects\Spiderpad\SpiderPad\obj\Debug\SpiderPad.Properties.Resources.resources
+C:\Users\Josh\Documents\Code\GithubProjects\Spiderpad\SpiderPad\obj\Debug\SpiderPad.csproj.GenerateResource.cache
+C:\Users\Josh\Documents\Code\GithubProjects\Spiderpad\SpiderPad\obj\Debug\SpiderPad.csproj.CoreCompileInputs.cache
+C:\Users\Josh\Documents\Code\GithubProjects\Spiderpad\SpiderPad\obj\Debug\SpiderPad.exe
+C:\Users\Josh\Documents\Code\GithubProjects\Spiderpad\SpiderPad\obj\Debug\SpiderPad.pdb
