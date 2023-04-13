@@ -18,8 +18,7 @@ namespace SpiderPad
         public mainPad()
         {
             InitializeComponent();
-            FileManager f = new FileManager();
-            string s = f.TestDatabase();
+            
         }
 
         private void Pad_Load(object sender, EventArgs e)
@@ -49,6 +48,15 @@ namespace SpiderPad
         private void tblPanel_Paint(object sender, PaintEventArgs e)
         {
 
+        }
+
+        private void mainPad_Load(object sender, EventArgs e)
+        {
+         //   Type t = new Type("Nod");
+         //   Console.WriteLine(t.Val());
+            FileManager f = new FileManager();
+            //  string s = f.TestDatabase();
+            f.Debug();
         }
     }
 }
