@@ -65,8 +65,6 @@ namespace SpiderPad
 
         public string Insert(Tables table,string[] fields,string[] values)
         {
-            SqlConnection conn = null;
-            SqlCommand cmd;
             ///string interpolation
             ///INSERT INTO [dbo].[#table] (#field1, #field1,...) VALUES (#field1, #field1,...)
             ///INSERT INTO [dbo].[UIDs] ([UID], [type]) VALUES (3, N'Nodes')
@@ -88,6 +86,13 @@ namespace SpiderPad
             query += ")";
             return query;
         }
+
+        public string read(Tables table, string[] fields, string[] conditions)
+        {
+            string query = $"SELECT * FROM [dbo].[{table}] WHERE ";
+            return null;
+        }
+
 
     }
     public class FileManager

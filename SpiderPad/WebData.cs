@@ -51,6 +51,11 @@ namespace SpiderPad
             type = SqlManager.Tables.Nodes;
             data = d;
         }
+
+        public void import()
+        {
+
+        }
         public new void New()
         {
             base.New();
