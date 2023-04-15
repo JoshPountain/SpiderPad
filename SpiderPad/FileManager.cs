@@ -102,7 +102,7 @@ namespace SpiderPad
         }
         public string Read(Tables table, string[] fields, string[] conditions)
         {
-            string query = $"SELECT * FROM [dbo].[{table}] WHERE";
+            string query = $"SELECT * FROM [dbo].[{table}] WHERE ";
             try
             {
                 query += $"{fields[0]}={conditions[0]}";
@@ -113,9 +113,9 @@ namespace SpiderPad
             }
             catch
             {
-                return null;
+                return "Error";
             }
-            return null;
+            return query;
         }
 
 
@@ -146,8 +146,9 @@ namespace SpiderPad
             //Console.WriteLine("Done");
 
             //Testing read functionality of sql class and shit
-            Nodes n = new Nodes(GenUID().ToString(), 0, 7, 8, "flgT", "Demo") ;
-            n.Import();
+            //Nodes n = new Nodes("2", 0, 7, 8, "flgT", "Demo") ;
+            Nodes n = new Nodes("2", 9, 9, 9, "false", "false");
+            n.Import("2");
             Console.WriteLine("Done");
         }
         public FileManager()
