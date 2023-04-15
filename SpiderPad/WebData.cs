@@ -78,25 +78,7 @@ namespace SpiderPad
             }
             conn.Close();
 
-            //Importing layerID
-            cmd = new SqlCommand(sql.Read(SqlManager.Tables.NLUIDs, "NLUID", uid), conn);
-            conn.Open();
-            reader = cmd.ExecuteReader();
-            reader.Read();
-            string luid;
-            for (int i = 0; i < 5; i++)
-            {
-                try
-                {
-                   luid = (reader.GetString(i));
-                }
-                catch
-                {
-                    luid = (reader.GetInt32(i).ToString());
-                }
-            }
-
-            inDatabase = true;
+            
             //now data contains uid, locationX, locationY, Flag, Text
             uid = data[0];
         }
@@ -145,6 +127,11 @@ namespace SpiderPad
         public NLUIDs(string uid, int layerUID) : base(uid)
         {
             string[] d = { uid, layerUID.ToString(), type.ToString() };
+            data = d;
+        }
+        public NLUIDs(string uid) : base(uid)
+        {
+            string[] d = { uid, null, type.ToString() };
             data = d;
         }
         public new void New()
