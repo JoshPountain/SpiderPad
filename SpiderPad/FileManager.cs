@@ -5,6 +5,7 @@ using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Runtime.Remoting.Contexts;
+using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -87,9 +88,33 @@ namespace SpiderPad
             return query;
         }
 
-        public string read(Tables table, string[] fields, string[] conditions)
+        public string Read(Tables table)
         {
-            string query = $"SELECT * FROM [dbo].[{table}] WHERE ";
+            string query = $"SELECT * FROM [dbo].[{table}]";
+            return query;
+        }
+
+        public string Read(Tables table, string field, string conditions)
+        {
+            string[] f = { field };
+            string[] c = {conditions };
+            return Read(table, f, c);
+        }
+        public string Read(Tables table, string[] fields, string[] conditions)
+        {
+            string query = $"SELECT * FROM [dbo].[{table}] WHERE";
+            try
+            {
+                query += $"{fields[0]}={conditions[0]}";
+                for(int i = 1;  i < fields.Length; i++) 
+                {
+                    query += $"AND {fields[i]}={conditions[i]}";
+                }
+            }
+            catch
+            {
+                return null;
+            }
             return null;
         }
 
@@ -116,8 +141,13 @@ namespace SpiderPad
 
 
             //Testing functionality of the sql creator class and the abstraction in webdata class(and children)
+            //Nodes n = new Nodes(GenUID().ToString(), 0, 7, 8, "flgT", "Demo") ;
+            //n.New();
+            //Console.WriteLine("Done");
+
+            //Testing read functionality of sql class and shit
             Nodes n = new Nodes(GenUID().ToString(), 0, 7, 8, "flgT", "Demo") ;
-            n.New();
+            n.Import();
             Console.WriteLine("Done");
         }
         public FileManager()

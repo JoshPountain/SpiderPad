@@ -42,7 +42,8 @@ namespace SpiderPad
     {
         protected new SqlManager.Tables table = SqlManager.Tables.Nodes;
         public new string[] fields = { "UID", "LocationX", "LocationY", "Flag", "Text" };
-        public string[] data = new string[5];
+        protected bool inDatabase = false;
+        public string[] data { get; protected set; } = new string[5];
 
         //nodes value here propogating down to the base class incorrectly
         public Nodes(string uid, int layerUID, int locationX, int locationY, string flag, string text) : base(uid, layerUID)
@@ -51,18 +52,68 @@ namespace SpiderPad
             type = SqlManager.Tables.Nodes;
             data = d;
         }
-
-        public void import()
+        public Nodes() : base("0", 0)
         {
-
+            Import();
+            
         }
+
+        public void Import()
+        {
+            //SqlCommand cmd = new SqlCommand(sql.Read(table), conn);
+            SqlCommand cmd = new SqlCommand(sql.Read(table, "UID", uid), conn);
+            conn.Open();
+            SqlDataReader reader = cmd.ExecuteReader();
+            reader.Read();
+            for (int i = 0; i < 5; i++)
+            {
+                try
+                {
+                    data[i] = (reader.GetString(i));
+                }
+                catch
+                {
+                    data[i] = (reader.GetInt32(i).ToString());
+                }
+            }
+            conn.Close();
+
+            //Importing layerID
+            cmd = new SqlCommand(sql.Read(SqlManager.Tables.NLUIDs, "NLUID", uid), conn);
+            conn.Open();
+            reader = cmd.ExecuteReader();
+            reader.Read();
+            string luid;
+            for (int i = 0; i < 5; i++)
+            {
+                try
+                {
+                   luid = (reader.GetString(i));
+                }
+                catch
+                {
+                    luid = (reader.GetInt32(i).ToString());
+                }
+            }
+
+            inDatabase = true;
+            //now data contains uid, locationX, locationY, Flag, Text
+            uid = data[0];
+        }
+
+
         public new void New()
         {
+            if (inDatabase)
+            {
+                return;
+            }
             base.New();
             SqlCommand cmd = new SqlCommand(sql.Insert(table, fields, data), conn);
             conn.Open();
             cmd.ExecuteNonQuery();
             conn.Close();
+            inDatabase = true;
         }
     }
 
