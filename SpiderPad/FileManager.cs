@@ -1,11 +1,13 @@
 ﻿using System;
 using System.CodeDom.Compiler;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Runtime.Remoting.Contexts;
 using System.Runtime.Remoting.Messaging;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -123,8 +125,54 @@ namespace SpiderPad
     public class FileManager
     {
         string dir;
-        
-        
+        DatabaseHandler handler = new DatabaseHandler();
+        public FileManager()
+        {
+            dir = Directory.GetCurrentDirectory();
+            if (File.Exists(dir + "\\UIDs.txt"))
+            {
+                File.Create(dir + "\\UIDs.txt");
+            }
+        }
+
+        public ArrayList OpenDatabase()
+        {
+            ArrayList web = new ArrayList();
+            //Lists all UIDs out + type of component
+            List<string[]> parts = handler.GetParts();
+            List<Nodes> nodes = new List<Nodes>();
+            List<Links> links = new List<Links>();
+            List<Layers> layers = new List<Layers>();
+
+            foreach (string[] part in parts) 
+            {
+                switch(part[1]) 
+                {
+                    case "Nodes":
+                        //Calls node class constructor which gets remaining data from database and saves object
+                        Nodes n = new Nodes(part[0]);
+                        nodes.Add(n);
+                        break;
+
+                    case "Links":
+                        Links l = new Links(part[0]);
+                        links.Add(l);
+                        break;
+
+                    case "Layers":
+                        Layers lay = new Layers(part[0]);
+                        layers.Add(lay);
+                        break;
+
+
+
+                    default:
+                        break;
+                }
+            }
+
+            return web;
+        }
         public void Debug()
         {
             //Area to call methods to test in debugging
@@ -141,48 +189,18 @@ namespace SpiderPad
 
 
             //Testing functionality of the sql creator class and the abstraction in webdata class(and children)
-            //Nodes n = new Nodes(GenUID().ToString(), 0, 7, 8, "flgT", "Demo") ;
-            //n.New();
-            //Console.WriteLine("Done");
+            Nodes n = new Nodes(GenUID().ToString(), 0, 7, 8, "flgT", "Demo");
+            n.New();
+            Console.WriteLine("Done");
 
             //Testing read functionality of sql class and shit
             //Nodes n = new Nodes("2", 0, 7, 8, "flgT", "Demo") ;
-            Nodes n = new Nodes("2", 9, 9, 9, "false", "false");
-            n.Import("2");
-            Console.WriteLine("Done");
+            //Nodes n = new Nodes("2", 9, 9, 9, "false", "false");
+            // n.Import("2");
+            // Console.WriteLine("Done");
         }
-        public FileManager()
-        {
-            dir = Directory.GetCurrentDirectory();
-            if (File.Exists(dir + "\\UIDs.txt"))
-            {
-                File.Create(dir + "\\UIDs.txt");
-            }
-        }
+        
 
-        public string TestDatabase()
-        {
-            int test = 0;
-            test = GenUID();
-
-            SqlConnection conn = new SqlConnection();
-            //conn.ConnectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=C:\USERS\JOSH\DOCUMENTS\CODE\GITHUBPROJECTS\SPIDERPAD\SPIDERPAD\COMPONENTS.MDF;Integrated Security=True;Connect Timeout=30;Encrypt=False;";
-            conn.ConnectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\Josh\Documents\Code\GithubProjects\Spiderpad\SpiderPad\Database\WebData.mdf;Integrated Security=True;Connect Timeout=30";
-            conn.Open();
-            SqlCommand command = new SqlCommand("SELECT * FROM Layers WHERE LayerUID=3", conn);
-            SqlCommand add = new SqlCommand("INSERT INTO [dbo].[Layers] ([LayerUID], [Tab3Link], [Position]) VALUES (3, N'DataLad  ', 4)", conn);
-            //add.ExecuteNonQuery();
-            SqlDataAdapter adapter = new SqlDataAdapter();
-            adapter.InsertCommand = add;
-            adapter.InsertCommand.ExecuteNonQuery();
-            SqlDataReader reader = command.ExecuteReader();
-            reader.Read();
-            string s = reader.GetString(1).ToString();
-            reader.Read();
-            string s2 = reader.GetString(1).ToString();
-            int i = reader.GetInt32(0);
-            return "Hello";
-        }
 
         public string GetConnentionString()
         {
@@ -190,115 +208,7 @@ namespace SpiderPad
             return con;
         }
 
-        public void AddComponent(Node c)
-        {
-            //Setting up connection to database
-            SqlConnection conn = new SqlConnection();
-            SqlCommand cmd = new SqlCommand("SELECT * FROM Nodes", conn);
-            conn.ConnectionString = GetConnentionString();
-            conn.Open();
-            SqlDataReader reader = cmd.ExecuteReader();
-            //Actually testing and giving UID to node
-            try
-            {
-                while (true)
-                {
-                    reader.Read();
-                    int i = reader.GetInt32(0);
-                    if (i == c.uid)
-                    {
-                        c.SetUid(GenUID());
-                    }
-                }
-            }
-            catch (InvalidOperationException ex)
-            {
-                
-                SqlCommand add = new SqlCommand("INSERT INTO [dbo].[Nodes] ([NodeUID], [Name], [Text], [PositionX], [PositionY]) VALUES (" + c.uid + ", N'" + c.name + "', N'" + c.text + "', " + c.position[0] + ", " + c.position[1] + ")", conn);
-                SqlDataAdapter adapter = new SqlDataAdapter();
-                adapter.InsertCommand = add;
-                adapter.InsertCommand.ExecuteNonQuery();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.ToString());
-            }
-        }
-        public void AddComponent(Link c)
-        {
-            ///UNtested and needs changes from the pasted code from nodes
 
-            //Setting up connection to database
-            SqlConnection conn = new SqlConnection();
-            SqlCommand cmd = new SqlCommand("SELECT * FROM Links", conn);
-            conn.ConnectionString = GetConnentionString();
-            conn.Open();
-            SqlDataReader reader = cmd.ExecuteReader();
-            //Actually testing and giving UID to node
-            try
-            {
-                while (true)
-                {
-                    reader.Read();
-                    int i = reader.GetInt32(0);
-                    if (i == c.uid)
-                    {
-                        c.SetUid(GenUID());
-                    }
-                }
-            }
-            catch (InvalidOperationException ex)
-            {
-                //Add to database
-                SqlCommand add = new SqlCommand("INSERT INTO [dbo].[Nodes] ([NodeUID], [Name], [Text]) VALUES (" + c.uid + ", N'" + c.name + "', N'" + c.text +")", conn);
-                SqlDataAdapter adapter = new SqlDataAdapter();
-                adapter.InsertCommand = add;
-                adapter.InsertCommand.ExecuteNonQuery();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.ToString());
-            }
-        }
-        public void AddComponmnt(Layer c)
-        {
-            ///UNtested and needs changes from the pasted code from nodes
-            //Setting up connection to database
-            SqlConnection conn = new SqlConnection();
-            SqlCommand cmd = new SqlCommand("SELECT * FROM Nodes", conn);
-            conn.ConnectionString = GetConnentionString();
-            conn.Open();
-            SqlDataReader reader = cmd.ExecuteReader();
-            //Actually testing and giving UID to node
-            try
-            {
-                while (true)
-                {
-                    reader.Read();
-                    int i = reader.GetInt32(0);
-                    if (i == c.uid)
-                    {
-                        c.SetUid(GenUID());
-                    }
-                }
-            }
-            catch (InvalidOperationException ex)
-            {
-                //Add to database
-                SqlCommand add = new SqlCommand("INSERT INTO [dbo].[Nodes] ([NodeUID], [Name], [Text], [PositionX], [PositionY]) VALUES (" + c.uid + ", N'" + c.name + "', N'" + c.text + ")", conn);
-                SqlDataAdapter adapter = new SqlDataAdapter();
-                adapter.InsertCommand = add;
-                adapter.InsertCommand.ExecuteNonQuery();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.ToString());
-            }
-        }
-        protected void AddComponent(string name, SqlConnection con)
-        {
-
-        }
 
         public int GenUID()
         {
@@ -315,7 +225,7 @@ namespace SpiderPad
             //Actually testing and giving UID to node
             try
             {
-                while(true)
+                while (true)
                 {
                     reader.Read();
                     int i = reader.GetInt32(0);
@@ -340,96 +250,16 @@ namespace SpiderPad
                     }
                 }
             }
-            catch(Exception e) 
+            catch (Exception e)
             {
-                
+
                 return -1;
             }
         }
 
 
-        public void SaveFile(Storage file)
-        {
-            string name = file.name;
-            string content = file.content;
-            File.WriteAllText(dir + "\\" + name, content);
-        }
 
-        public string SetUID(string DEPRECIATED)
-        {
-            string uids, path = dir + "\\NLUIDs.txt";
-            string uid = null;
-            uids = File.ReadAllText(path);
-            List<int> list = new List<int>();
-            int i = 0;
-            //compile list of existing id's
-            foreach (char c in uids)
-            {
-                string id = "";
-                if (c != ',')
-                {
-                    id += c;
-                }
-                else
-                {
-                    list.Add(Convert.ToUInt16(id));
-                }
-
-            }
-            //Assign a new id
-            int tid = 0;
-            while (true)
-            {
-                if (list.Contains(tid))
-                {
-                    tid++;
-                }
-                else
-                {
-                    return tid.ToString();
-                }
-            }
-
-        }
-    }
-    public class Storage
-    {
-        string path;
-        public readonly string uid;
-        FileManager manager = new FileManager();
-        public Storage(string name)
-        {
-            path = Directory.GetCurrentDirectory() + "\\" + name;
-            this.name = name;
-            uid = manager.SetUID("UNUSED");
-        }
-
-        public string name
-        {
-            private set { }
-            get
-            {
-                return name;
-            }
-        }
-
-        public string content
-        {
-            private set
-            {
-                if (content == null)
-                {
-                    content = value;
-                }
-                else
-                {
-                    content = content;
-                }
-            }
-            get
-            {
-                return content;
-            }
-        }
+      
     }
 }
+    

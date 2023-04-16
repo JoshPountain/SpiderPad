@@ -7,10 +7,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Windows.Forms;
+using System.Security.Cryptography;
 
 namespace SpiderPad
 {
-    
+
     public abstract class WebData
     {
         protected enum Attributes
@@ -36,36 +37,15 @@ namespace SpiderPad
         {
             conn.ConnectionString = con;
         }
-        
-    }
-    public class Nodes : NLUIDs
-    {
-        protected new SqlManager.Tables table = SqlManager.Tables.Nodes;
-        public new string[] fields = { "UID", "LocationX", "LocationY", "Flag", "Text" };
-        protected bool inDatabase = false;
-        public string[] data { get; protected set; } = new string[5];
-
-        //nodes value here propogating down to the base class incorrectly
-        public Nodes(string uid, int layerUID, int locationX, int locationY, string flag, string text) : base(uid, layerUID)
+        public string[] Import(SqlManager.Tables table, string uid, string[] fields)
         {
-            string[] d = {uid, locationX.ToString(), locationY.ToString(), flag, text};
-            type = SqlManager.Tables.Nodes;
-            data = d;
-        }
-        public Nodes(string uid) : base("0", 0)
-        {
-            Import( uid);
-            
-        }
-
-        public void Import(string uid)
-        {
+            string[] data = new string[fields.Length];
             //SqlCommand cmd = new SqlCommand(sql.Read(table), conn);
             SqlCommand cmd = new SqlCommand(sql.Read(table, "UID", uid), conn);
             conn.Open();
             SqlDataReader reader = cmd.ExecuteReader();
             reader.Read();
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < fields.Length; i++)
             {
                 try
                 {
@@ -77,12 +57,30 @@ namespace SpiderPad
                 }
             }
             conn.Close();
-
-            
-            //now data contains uid, locationX, locationY, Flag, Text
             uid = data[0];
+            return data;
         }
 
+    }
+    public class Nodes : NLUIDs
+    {
+        protected new SqlManager.Tables table = SqlManager.Tables.Nodes;
+        public new string[] fields = { "UID", "LocationX", "LocationY", "Flag", "Text" };
+        protected bool inDatabase = false;
+        public string[] data { get; protected set; } = new string[5];
+
+        //nodes value here propogating down to the base class incorrectly
+        public Nodes(string uid, int layerUID, int locationX, int locationY, string flag, string text) : base(uid, layerUID)
+        {
+            string[] d = { uid, locationX.ToString(), locationY.ToString(), flag, text };
+            type = SqlManager.Tables.Nodes;
+            data = d;
+        }
+        public Nodes(string uid) : base("0", 0)
+        {
+            Import(table, uid, fields);
+
+        }
 
         public new void New()
         {
@@ -99,7 +97,7 @@ namespace SpiderPad
         }
     }
 
-    public class Links: NLUIDs
+    public class Links : NLUIDs
     {
         protected new SqlManager.Tables table = SqlManager.Tables.Links;
         public new string[] fields = { "UID", "N1UID", "N2UID", "Text" };
@@ -109,6 +107,11 @@ namespace SpiderPad
             string[] d = { uid, n1uid.ToString(), n2uid.ToString(), text };
             type = SqlManager.Tables.Links;
         }
+
+        public Links(string uid) : base("0", 0)
+        {
+            Import(table, uid, fields);
+        }
         public new void New()
         {
             base.New();
@@ -117,6 +120,7 @@ namespace SpiderPad
             cmd.ExecuteNonQuery();
             conn.Close();
         }
+        
     }
 
     public class NLUIDs : UIDs
@@ -134,6 +138,8 @@ namespace SpiderPad
             string[] d = { uid, null, type.ToString() };
             data = d;
         }
+
+        
         public new void New()
         {
             //data redeclared here because it will not propogate correctly otherwise
@@ -146,7 +152,7 @@ namespace SpiderPad
         }
     }
 
-    public class Layers : UIDs 
+    public class Layers : UIDs
     {
 
         protected new SqlManager.Tables table = SqlManager.Tables.Layers;
@@ -160,6 +166,11 @@ namespace SpiderPad
             type = SqlManager.Tables.Layers;
         }
 
+        public Layers(string uid) : base("0")
+        {
+            Import(table, uid, fields);
+        }
+
         public new void New()
         {
             base.New();
@@ -168,6 +179,8 @@ namespace SpiderPad
             cmd.ExecuteNonQuery();
             conn.Close();
         }
+
+        
     }
 
     public class UIDs : WebData
@@ -181,7 +194,7 @@ namespace SpiderPad
         public UIDs(string uid)
         {
             data[0] = uid;
-            
+
 
         }
 
@@ -195,6 +208,7 @@ namespace SpiderPad
             //INSERT INTO [dbo].[UIDs] ([UID], [type]) VALUES (2, NULL)
         }
 
+        
     }
 
 }

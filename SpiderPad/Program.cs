@@ -16,8 +16,10 @@ namespace SpiderPad
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            mainPad p = new mainPad();
-            Application.Run(p);
+            TaskMaster t = new TaskMaster();
+            t.Run();
+            //mainPad p = new mainPad();
+            //Application.Run(p);
         }
     }
 }

@@ -88,7 +88,7 @@ namespace SpiderPad
         public int[] position { get; private set; } = new int[2];
 
         List<String> flags = new List<String>();
-        SqlManager.Tables name = SqlManager.Tables.Nodes;
+        new SqlManager.Tables name = SqlManager.Tables.Nodes;
         public Node(int[] location, string name, string text) : base(text)
         {
             
