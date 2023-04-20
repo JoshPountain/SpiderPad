@@ -90,6 +90,28 @@ namespace SpiderPad
             return query;
         }
 
+        public string Delete(Tables table,  string condition, string uid)
+        {
+            string query = $"DELETE FROM [dbo].[{table}] WHERE [{condition}] = {uid}";
+
+            if(table == Tables.Layers)
+            {
+                DeleteLayer(condition);
+            }
+
+            return query;
+        }
+
+        private void DeleteLayer(string layerUID)
+        {
+            string query = $"DELETE FROM [dbo].[Layers] WHERE [UID] = {layerUID}";
+            SqlConnection conn = new SqlConnection(conString);
+            SqlCommand cmd = new SqlCommand(query, conn);
+            conn.Open();
+            cmd.ExecuteNonQuery();
+            conn.Close();
+        }
+
         public string Read(Tables table)
         {
             string query = $"SELECT * FROM [dbo].[{table}]";
@@ -189,9 +211,13 @@ namespace SpiderPad
 
 
             //Testing functionality of the sql creator class and the abstraction in webdata class(and children)
-            Nodes n = new Nodes(GenUID().ToString(), 0, 7, 8, "flgT", "Demo");
-            n.New();
-            Console.WriteLine("Done");
+            //Nodes n = new Nodes(GenUID().ToString(), 0, 7, 8, "flgT", "Demo");
+            //n.New();
+            //Console.WriteLine("Done");
+
+            DatabaseHandler handler = new DatabaseHandler();
+            //handler.TestSetup();
+            handler.TestLinks();
 
             //Testing read functionality of sql class and shit
             //Nodes n = new Nodes("2", 0, 7, 8, "flgT", "Demo") ;

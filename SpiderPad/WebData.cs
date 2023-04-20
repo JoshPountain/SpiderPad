@@ -61,6 +61,14 @@ namespace SpiderPad
             return data;
         }
 
+        public void Delete(string uid, string field)
+        {
+            SqlCommand cmd = new SqlCommand(sql.Delete(SqlManager.Tables.UIDs, field, uid), conn);
+            conn.Open();
+            cmd.ExecuteNonQuery();
+            conn.Close();
+        }
+
     }
     public class Nodes : NLUIDs
     {
@@ -95,16 +103,23 @@ namespace SpiderPad
             conn.Close();
             inDatabase = true;
         }
+
+        public void Delete()
+        {
+            base.Delete(uid, fields[0]);
+        }
     }
 
     public class Links : NLUIDs
     {
         protected new SqlManager.Tables table = SqlManager.Tables.Links;
         public new string[] fields = { "UID", "N1UID", "N2UID", "Text" };
+        //should data contain uid (no?)
         private string[] data = new string[4];
         public Links(string uid, int layerUID, int n1uid, int n2uid, string text) : base(uid, layerUID)
         {
             string[] d = { uid, n1uid.ToString(), n2uid.ToString(), text };
+            data = d;
             type = SqlManager.Tables.Links;
         }
 
@@ -120,7 +135,11 @@ namespace SpiderPad
             cmd.ExecuteNonQuery();
             conn.Close();
         }
-        
+        public new void Delete()
+        {
+            base.Delete(data[0], fields[0]);
+        }
+
     }
 
     public class NLUIDs : UIDs
@@ -149,6 +168,10 @@ namespace SpiderPad
             conn.Open();
             cmd.ExecuteNonQuery();
             conn.Close();
+        }
+        public void Delete()
+        {
+            base.Delete(uid, fields[0]);
         }
     }
 
@@ -180,6 +203,16 @@ namespace SpiderPad
             conn.Close();
         }
 
+        public void Delete()
+        {
+            SqlCommand cmd = new SqlCommand(sql.Delete(SqlManager.Tables.UIDs, fields[0], uid));
+            conn.Open();
+            cmd.ExecuteNonQuery();
+            conn.Close();
+
+            Delete(uid, "LayerUID");
+        }
+
         
     }
 
@@ -207,8 +240,12 @@ namespace SpiderPad
             conn.Close();
             //INSERT INTO [dbo].[UIDs] ([UID], [type]) VALUES (2, NULL)
         }
+        public void Delete()
+        {
+            base.Delete(uid, fields[0]);
+        }
 
-        
+
     }
 
 }

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -15,6 +16,34 @@ namespace SpiderPad
         public DatabaseHandler()
         {
 
+        }
+
+
+        public void TestSetup()
+        {
+            //Testing read functionality of sql class and shit
+            //Nodes n = new Nodes("2", 0, 7, 8, "flgT", "Demo") ;
+            //Nodes n = new Nodes("2", 9, 9, 9, "false", "false");
+            // n.Import("2");
+            // Console.WriteLine("Done");
+            Layers l = new Layers("6", "DemoLayer1", 1);
+            l.New();
+            Nodes[] n = new Nodes[5];
+            for (int i = 0; i < 5; i++) 
+            {
+                n[i] = new Nodes(i.ToString(), 6, i, i, $"DEMO{i}", $"DEMO{i}");
+                n[i].New();
+            }
+            //Links link = new Links("7", 6, 0, 1, "DemoLink");
+            //link.New();
+            
+        }
+
+        public void TestLinks() 
+        {
+            Links link = new Links("7", 6, 2, 1, "DemoLink");
+            //link.New();
+            link.Delete();
         }
 
         public List<string[]> GetParts()
