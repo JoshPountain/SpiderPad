@@ -37,11 +37,11 @@ namespace SpiderPad
         {
             conn.ConnectionString = con;
         }
-        public string[] Import(SqlManager.Tables table, string uid, string[] fields)
+        protected string[] Import(SqlManager.Tables table, string uid, string[] fields)
         {
             string[] data = new string[fields.Length];
             //SqlCommand cmd = new SqlCommand(sql.Read(table), conn);
-            SqlCommand cmd = new SqlCommand(sql.Read(table, "UID", uid), conn);
+            SqlCommand cmd = new SqlCommand(sql.Read(table, fields[0], uid), conn);
             conn.Open();
             SqlDataReader reader = cmd.ExecuteReader();
             reader.Read();
@@ -87,7 +87,14 @@ namespace SpiderPad
         public Nodes(string uid) : base("0", 0)
         {
             Import(table, uid, fields);
+            base.uid = uid;
 
+        }
+
+        public string[] Import()
+        {
+            data = Import(table, uid, fields);
+            return data;
         }
 
         public new void New()
@@ -104,9 +111,9 @@ namespace SpiderPad
             inDatabase = true;
         }
 
-        public void Delete()
+        public new void Delete()
         {
-            base.Delete(uid, fields[0]);
+            Delete(uid, fields[0]);
         }
     }
 
@@ -115,7 +122,7 @@ namespace SpiderPad
         protected new SqlManager.Tables table = SqlManager.Tables.Links;
         public new string[] fields = { "UID", "N1UID", "N2UID", "Text" };
         //should data contain uid (no?)
-        private string[] data = new string[4];
+        public string[] data { get;  private set; } = new string[4];
         public Links(string uid, int layerUID, int n1uid, int n2uid, string text) : base(uid, layerUID)
         {
             string[] d = { uid, n1uid.ToString(), n2uid.ToString(), text };
@@ -126,6 +133,7 @@ namespace SpiderPad
         public Links(string uid) : base("0", 0)
         {
             Import(table, uid, fields);
+            base.uid = uid;
         }
         public new void New()
         {
@@ -134,6 +142,11 @@ namespace SpiderPad
             conn.Open();
             cmd.ExecuteNonQuery();
             conn.Close();
+        }
+        public string[] Import()
+        {
+            data = Import(table, uid, fields);
+            return data;
         }
         public new void Delete()
         {
@@ -169,7 +182,8 @@ namespace SpiderPad
             cmd.ExecuteNonQuery();
             conn.Close();
         }
-        public void Delete()
+        
+        public new void Delete()
         {
             base.Delete(uid, fields[0]);
         }
@@ -180,7 +194,7 @@ namespace SpiderPad
 
         protected new SqlManager.Tables table = SqlManager.Tables.Layers;
         public new string[] fields = { "LayerUID", "Name", "Position" };
-        private string[] data = new string[3];
+        public string[] data { get; private set; } = new string[3];
         public Layers(string uid, string name, int position) : base(uid)
         {
             data[0] = uid;
@@ -192,6 +206,7 @@ namespace SpiderPad
         public Layers(string uid) : base("0")
         {
             Import(table, uid, fields);
+            base.uid = uid;
         }
 
         public new void New()
@@ -202,8 +217,13 @@ namespace SpiderPad
             cmd.ExecuteNonQuery();
             conn.Close();
         }
+        public string[] Import()
+        {
+            data = Import(table, uid, fields);
+            return data;
+        }
 
-        public void Delete()
+        public new void Delete()
         {
             SqlCommand cmd = new SqlCommand(sql.Delete(SqlManager.Tables.UIDs, fields[0], uid));
             conn.Open();

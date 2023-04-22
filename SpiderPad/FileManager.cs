@@ -217,7 +217,7 @@ namespace SpiderPad
 
             DatabaseHandler handler = new DatabaseHandler();
             //handler.TestSetup();
-            handler.TestLinks();
+            handler.TestImport();
 
             //Testing read functionality of sql class and shit
             //Nodes n = new Nodes("2", 0, 7, 8, "flgT", "Demo") ;
