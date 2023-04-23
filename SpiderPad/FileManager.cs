@@ -96,20 +96,23 @@ namespace SpiderPad
 
             if(table == Tables.Layers)
             {
-                DeleteLayer(condition);
+                return DeleteLayer(condition);
             }
 
             return query;
         }
 
-        private void DeleteLayer(string layerUID)
+        private string DeleteLayer(string layerUID)
         {
-            string query = $"DELETE FROM [dbo].[Layers] WHERE [UID] = {layerUID}";
-            SqlConnection conn = new SqlConnection(conString);
-            SqlCommand cmd = new SqlCommand(query, conn);
-            conn.Open();
-            cmd.ExecuteNonQuery();
-            conn.Close();
+            string query = $"DELETE FROM [dbo].[Layers] WHERE [LayerUID] = {layerUID}";
+
+            return query;
+            ///database interaction should only happen in database class
+            //SqlConnection conn = new SqlConnection(conString);
+            //SqlCommand cmd = new SqlCommand(query, conn);
+            //conn.Open();
+            //cmd.ExecuteNonQuery();
+            //conn.Close();
         }
 
         public string Read(Tables table)
@@ -217,7 +220,8 @@ namespace SpiderPad
 
             DatabaseHandler handler = new DatabaseHandler();
             //handler.TestSetup();
-            handler.TestImport();
+            //handler.TestImport();
+            handler.TestDelete();
 
             //Testing read functionality of sql class and shit
             //Nodes n = new Nodes("2", 0, 7, 8, "flgT", "Demo") ;

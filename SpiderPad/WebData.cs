@@ -61,9 +61,9 @@ namespace SpiderPad
             return data;
         }
 
-        public void Delete(string uid, string field)
+        public void Delete(string uid)
         {
-            SqlCommand cmd = new SqlCommand(sql.Delete(SqlManager.Tables.UIDs, field, uid), conn);
+            SqlCommand cmd = new SqlCommand(sql.Delete(SqlManager.Tables.UIDs, "UID", uid), conn);
             conn.Open();
             cmd.ExecuteNonQuery();
             conn.Close();
@@ -113,7 +113,7 @@ namespace SpiderPad
 
         public new void Delete()
         {
-            Delete(uid, fields[0]);
+            Delete(uid);
         }
     }
 
@@ -150,7 +150,7 @@ namespace SpiderPad
         }
         public new void Delete()
         {
-            base.Delete(data[0], fields[0]);
+            Delete(data[0]);
         }
 
     }
@@ -185,7 +185,7 @@ namespace SpiderPad
         
         public new void Delete()
         {
-            base.Delete(uid, fields[0]);
+            Delete(uid);
         }
     }
 
@@ -225,12 +225,14 @@ namespace SpiderPad
 
         public new void Delete()
         {
-            SqlCommand cmd = new SqlCommand(sql.Delete(SqlManager.Tables.UIDs, fields[0], uid));
+            conn.ConnectionString = con;
+            SqlCommand cmd = new SqlCommand(sql.Delete(SqlManager.Tables.Layers, fields[0], uid), conn);
+            
             conn.Open();
             cmd.ExecuteNonQuery();
             conn.Close();
 
-            Delete(uid, "LayerUID");
+            Delete(data[0]);
         }
 
         
@@ -262,7 +264,7 @@ namespace SpiderPad
         }
         public void Delete()
         {
-            base.Delete(uid, fields[0]);
+            Delete(uid);
         }
 
 

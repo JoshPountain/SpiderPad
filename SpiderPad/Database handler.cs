@@ -34,8 +34,8 @@ namespace SpiderPad
                 n[i] = new Nodes(i.ToString(), 6, i, i, $"DEMO{i}", $"DEMO{i}");
                 n[i].New();
             }
-            //Links link = new Links("7", 6, 0, 1, "DemoLink");
-            //link.New();
+            Links link = new Links("7", 6, 0, 1, "DemoLink");
+            link.New();
             
         }
 
@@ -46,14 +46,36 @@ namespace SpiderPad
             //link.Delete();
         }
 
+        public void TestDelete()
+        {
+            LocalStorage comp = Import();
+            List<Nodes> n = comp.Nodes();
+            List<Links> l = comp.Links();
+            List<Layers> lay = comp.Layers();
+            foreach (Nodes node in n)
+            {
+                node.Delete();
+            }
+            foreach (Links link in l)
+            {
+                link.Delete();
+            }
+            foreach (Layers layer in lay)
+            {
+                layer.Delete();
+            }
+
+            //Restore
+            TestSetup();
+        }
+
         public void TestImport()
         {
             Import();
         }
 
 
-
-        public ArrayList Import()
+        public LocalStorage Import()
         {
             try
             {
@@ -63,13 +85,8 @@ namespace SpiderPad
             {
 
             }
-            ArrayList web = new ArrayList();
-            web.Capacity = 3;
-            
-            List<Nodes> nodes = new List<Nodes>();
-            List<Links> links = new List<Links>();
-            List<Layers> layers = new List<Layers>();
-            
+            LocalStorage web = new LocalStorage();
+
             SqlManager sql = new SqlManager();
             SqlCommand cmd = new SqlCommand(sql.Read(SqlManager.Tables.UIDs), conn);
             FileManager f = new FileManager();
@@ -103,18 +120,17 @@ namespace SpiderPad
                         Nodes n = new Nodes(ids[i].ToString());
                         //Technically not needed as import called on initialization
                         n.Import();
-
-                        nodes.Add(n);
+                        web.AddNode(n);
                         break;
                     case "Links":
                         Links l = new Links(ids[i].ToString());
                         l.Import();
-                        links.Add(l);
+                        web.AddLink(l);
                         break;
                     case "Layers":
                         Layers lay = new Layers(ids[i].ToString());
                         lay.Import();
-                        layers.Add(lay);
+                        web.AddLayers(lay);
                         break;
                     default:
                         break;
@@ -124,21 +140,18 @@ namespace SpiderPad
             List<string> nodeUIDs = new List<string>();
             List<string> linkUIDs = new List<string>();
             List<string> layerUIDs = new List<string>();
-            foreach (Nodes n in nodes)
+            foreach (Nodes n in web.Nodes())
             {
                 nodeUIDs.Add(n.data[0]);
             }
-            foreach (Links l in links)
+            foreach (Links l in web.Links())
             {
                 linkUIDs.Add(l.data[0]);
             }
-            foreach (Layers lay in layers)
+            foreach (Layers lay in web.Layers())
             {
                 layerUIDs.Add(lay.data[0]);
             }
-            web.Add(nodes);
-            web.Add(links);
-            web.Add(layers);
             conn.Close();
             return web;
 
