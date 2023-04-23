@@ -39,6 +39,8 @@ namespace SpiderPad
             
         }
 
+
+
         public void TestLinks() 
         {
             Links link = new Links("7", 6, 2, 1, "DemoLink");
@@ -72,6 +74,34 @@ namespace SpiderPad
         public void TestImport()
         {
             Import();
+        }
+
+        public void WipeDatabase(bool AreYouSure, bool ReallySure)
+        {
+            if (!AreYouSure)
+            {
+                return;
+            }
+            if (!ReallySure)
+            {
+                return;
+            }
+            LocalStorage comp = Import();
+            List<Nodes> n = comp.Nodes();
+            List<Links> l = comp.Links();
+            List<Layers> lay = comp.Layers();
+            foreach (Nodes node in n)
+            {
+                node.Delete();
+            }
+            foreach (Links link in l)
+            {
+                link.Delete();
+            }
+            foreach (Layers layer in lay)
+            {
+                layer.Delete();
+            }
         }
 
 
@@ -118,18 +148,14 @@ namespace SpiderPad
                 {
                     case "Nodes":
                         Nodes n = new Nodes(ids[i].ToString());
-                        //Technically not needed as import called on initialization
-                        n.Import();
                         web.AddNode(n);
                         break;
                     case "Links":
                         Links l = new Links(ids[i].ToString());
-                        l.Import();
                         web.AddLink(l);
                         break;
                     case "Layers":
                         Layers lay = new Layers(ids[i].ToString());
-                        lay.Import();
                         web.AddLayers(lay);
                         break;
                     default:

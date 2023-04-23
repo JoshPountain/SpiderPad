@@ -39,6 +39,8 @@ namespace SpiderPad
         }
         protected string[] Import(SqlManager.Tables table, string uid, string[] fields)
         {
+            
+
             string[] data = new string[fields.Length];
             //SqlCommand cmd = new SqlCommand(sql.Read(table), conn);
             SqlCommand cmd = new SqlCommand(sql.Read(table, fields[0], uid), conn);
@@ -81,14 +83,29 @@ namespace SpiderPad
         public Nodes(string uid, int layerUID, int locationX, int locationY, string flag, string text) : base(uid, layerUID)
         {
             string[] d = { uid, locationX.ToString(), locationY.ToString(), flag, text };
-            type = SqlManager.Tables.Nodes;
             data = d;
+            setup();
         }
         public Nodes(string uid) : base("0", 0)
         {
             Import(table, uid, fields);
             base.uid = uid;
+            inDatabase = true;
+            setup();
+        }
 
+        public Nodes() : base("0", 0)
+        {
+            FileManager f = new FileManager();
+            uid = f.GenUID().ToString();
+            data[0] = uid;
+            setup();
+            
+        }
+
+        private void setup()
+        {
+            type = SqlManager.Tables.Nodes;
         }
 
         public string[] Import()

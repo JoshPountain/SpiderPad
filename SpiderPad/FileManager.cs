@@ -252,7 +252,7 @@ namespace SpiderPad
             conn.Open();
             SqlDataReader reader = cmd.ExecuteReader();
 
-            //Actually testing and giving UID to node
+            //Actually testing and giving UID to component
             try
             {
                 while (true)
