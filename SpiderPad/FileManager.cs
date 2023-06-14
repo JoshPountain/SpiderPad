@@ -59,12 +59,6 @@ namespace SpiderPad
         {
 
         }
-        public void Query(string table, Mode m)
-        {
-            SqlConnection conn = null;
-            SqlCommand cmd;
-
-        }
 
         public string Insert(Tables table,string[] fields,string[] values)
         {
@@ -115,6 +109,20 @@ namespace SpiderPad
             //conn.Close();
         }
 
+        public string Update(Tables table, string[] fields, string[] values, string condition, string uid)
+        {
+
+            //Untested copilot generated code
+            string query = $"UPDATE [dbo].[{table}] SET [{fields[0]}] = {values[0]}";
+
+            for(int i = 1; i < fields.Length; i++)
+            {
+                query += $", [{fields[i]}] = {values[i]}";
+            }
+            query += $" WHERE [{condition}] = {uid}";
+            return query;
+        }
+
         public string Read(Tables table)
         {
             string query = $"SELECT * FROM [dbo].[{table}]";
@@ -127,7 +135,7 @@ namespace SpiderPad
             string[] c = {conditions };
             return Read(table, f, c);
         }
-        public string Read(Tables table, string[] fields, string[] conditions)
+        private string Read(Tables table, string[] fields, string[] conditions)
         {
             string query = $"SELECT * FROM [dbo].[{table}] WHERE ";
             try

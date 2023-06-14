@@ -32,8 +32,10 @@ namespace SpiderPad
         {
             this.pbWeb = new System.Windows.Forms.PictureBox();
             this.tblPanel = new System.Windows.Forms.TableLayoutPanel();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
-            this.button1 = new System.Windows.Forms.Button();
+            this.cbComponent = new System.Windows.Forms.ComboBox();
+            this.btnSelect = new System.Windows.Forms.Button();
+            this.btnAddLink = new System.Windows.Forms.Button();
+            this.btnImport = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pbWeb)).BeginInit();
             this.tblPanel.SuspendLayout();
             this.SuspendLayout();
@@ -53,8 +55,10 @@ namespace SpiderPad
             this.tblPanel.ColumnCount = 2;
             this.tblPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tblPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tblPanel.Controls.Add(this.comboBox1, 0, 0);
-            this.tblPanel.Controls.Add(this.button1, 1, 0);
+            this.tblPanel.Controls.Add(this.cbComponent, 0, 0);
+            this.tblPanel.Controls.Add(this.btnSelect, 1, 0);
+            this.tblPanel.Controls.Add(this.btnAddLink, 1, 1);
+            this.tblPanel.Controls.Add(this.btnImport, 1, 4);
             this.tblPanel.Location = new System.Drawing.Point(520, 4);
             this.tblPanel.Name = "tblPanel";
             this.tblPanel.RowCount = 5;
@@ -66,25 +70,46 @@ namespace SpiderPad
             this.tblPanel.Size = new System.Drawing.Size(224, 441);
             this.tblPanel.TabIndex = 1;
             // 
-            // comboBox1
+            // cbComponent
             // 
-            this.comboBox1.BackColor = System.Drawing.Color.White;
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Items.AddRange(new object[] {
-            "Node"});
-            this.comboBox1.Location = new System.Drawing.Point(3, 3);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(104, 21);
-            this.comboBox1.TabIndex = 0;
+            this.cbComponent.BackColor = System.Drawing.Color.White;
+            this.cbComponent.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbComponent.FormattingEnabled = true;
+            this.cbComponent.Items.AddRange(new object[] {
+            "Node",
+            "Layer"});
+            this.cbComponent.Location = new System.Drawing.Point(3, 3);
+            this.cbComponent.Name = "cbComponent";
+            this.cbComponent.Size = new System.Drawing.Size(104, 21);
+            this.cbComponent.TabIndex = 0;
             // 
-            // button1
+            // btnSelect
             // 
-            this.button1.Location = new System.Drawing.Point(115, 3);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(106, 34);
-            this.button1.TabIndex = 1;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
+            this.btnSelect.Location = new System.Drawing.Point(115, 3);
+            this.btnSelect.Name = "btnSelect";
+            this.btnSelect.Size = new System.Drawing.Size(106, 34);
+            this.btnSelect.TabIndex = 1;
+            this.btnSelect.Text = "Select";
+            this.btnSelect.UseVisualStyleBackColor = true;
+            // 
+            // btnAddLink
+            // 
+            this.btnAddLink.Location = new System.Drawing.Point(115, 91);
+            this.btnAddLink.Name = "btnAddLink";
+            this.btnAddLink.Size = new System.Drawing.Size(75, 23);
+            this.btnAddLink.TabIndex = 2;
+            this.btnAddLink.Text = "Add Link";
+            this.btnAddLink.UseVisualStyleBackColor = true;
+            // 
+            // btnImport
+            // 
+            this.btnImport.Location = new System.Drawing.Point(115, 355);
+            this.btnImport.Name = "btnImport";
+            this.btnImport.Size = new System.Drawing.Size(75, 23);
+            this.btnImport.TabIndex = 3;
+            this.btnImport.Text = "Import";
+            this.btnImport.UseVisualStyleBackColor = true;
+            this.btnImport.Click += new System.EventHandler(this.btnImport_Click);
             // 
             // mainPad
             // 
@@ -108,7 +133,9 @@ namespace SpiderPad
 
         private PictureBox pbWeb;
         private TableLayoutPanel tblPanel;
-        private ComboBox comboBox1;
-        private Button button1;
+        private ComboBox cbComponent;
+        private Button btnSelect;
+        private Button btnAddLink;
+        private Button btnImport;
     }
 }

@@ -79,6 +79,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>WebDataDataSet.xsd</DependentUpon>
     </Compile>
+    <Compile Include="WebDataDataSet11.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>WebDataDataSet11.xsd</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
@@ -131,6 +136,17 @@
     </None>
     <None Include="WebDataDataSet.xss">
       <DependentUpon>WebDataDataSet.xsd</DependentUpon>
+    </None>
+    <None Include="WebDataDataSet11.xsc">
+      <DependentUpon>WebDataDataSet11.xsd</DependentUpon>
+    </None>
+    <None Include="WebDataDataSet11.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>WebDataDataSet11.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="WebDataDataSet11.xss">
+      <DependentUpon>WebDataDataSet11.xsd</DependentUpon>
     </None>
   </ItemGroup>
   <ItemGroup>

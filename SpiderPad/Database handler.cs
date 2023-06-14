@@ -147,11 +147,12 @@ namespace SpiderPad
                 switch (s)
                 {
                     case "Nodes":
-                        Nodes n = new Nodes(ids[i].ToString());
+                        //"ids[i]" must be layer uid here
+                        Nodes n = new Nodes(ids[i]);
                         web.AddNode(n);
                         break;
                     case "Links":
-                        Links l = new Links(ids[i].ToString());
+                        Links l = new Links(ids[i]);
                         web.AddLink(l);
                         break;
                     case "Layers":

@@ -77,6 +77,7 @@ namespace SpiderPad
         protected new SqlManager.Tables table = SqlManager.Tables.Nodes;
         public new string[] fields = { "UID", "LocationX", "LocationY", "Flag", "Text" };
         protected bool inDatabase = false;
+        protected string layerUID;
         public string[] data { get; protected set; } = new string[5];
 
         //nodes value here propogating down to the base class incorrectly
@@ -86,15 +87,25 @@ namespace SpiderPad
             data = d;
             setup();
         }
-        public Nodes(string uid) : base("0", 0)
+
+        /// <summary>
+        /// For creating node instance that will get data from database
+        /// </summary>
+        /// <param name="uid"></param>
+        public Nodes(string uid) : base("0")
         {
+            //For when in database already
             Import(table, uid, fields);
             base.uid = uid;
             inDatabase = true;
             setup();
         }
 
-        public Nodes() : base("0", 0)
+        /// <summary>
+        /// For creating new node without any data yet
+        /// </summary>
+        /// <param name="LayerUID"></param>
+        public Nodes(int LayerUID) : base("0", LayerUID)
         {
             FileManager f = new FileManager();
             uid = f.GenUID().ToString();
@@ -103,6 +114,29 @@ namespace SpiderPad
             
         }
 
+        public void SetLayerUID()
+        {
+            layerUID = GetLayerUID(data[0]);
+        }
+
+        public void Update() 
+        {
+            SqlCommand cmd = new SqlCommand(sql.Update(table, fields, data, "UID", uid), conn);
+            conn.Open();
+            cmd.ExecuteNonQuery();
+            conn.Close();
+        }
+
+        public void SetLayerUID(string uid)
+        {
+            layerUID = GetLayerUID(uid);
+
+            //Update function for database if not in it already
+            if (!inDatabase)
+            {
+
+            }
+        }
         private void setup()
         {
             type = SqlManager.Tables.Nodes;
@@ -113,6 +147,13 @@ namespace SpiderPad
             data = Import(table, uid, fields);
             return data;
         }
+
+        public int[] GetPos()
+        {
+            int[] pos = { Convert.ToInt32(data[1]), Convert.ToInt32(data[2]) };
+            return pos;
+        }
+
 
         public new void New()
         {
@@ -138,8 +179,9 @@ namespace SpiderPad
     {
         protected new SqlManager.Tables table = SqlManager.Tables.Links;
         public new string[] fields = { "UID", "N1UID", "N2UID", "Text" };
-        //should data contain uid (no?)
-        public string[] data { get;  private set; } = new string[4];
+        string layerUID;
+        protected bool inDatabase = false;
+        public string[] data { get; private set; } = new string[4];
         public Links(string uid, int layerUID, int n1uid, int n2uid, string text) : base(uid, layerUID)
         {
             string[] d = { uid, n1uid.ToString(), n2uid.ToString(), text };
@@ -147,11 +189,50 @@ namespace SpiderPad
             type = SqlManager.Tables.Links;
         }
 
-        public Links(string uid) : base("0", 0)
+        /// <summary>
+        /// For creating link instance that will get data from database
+        /// </summary>
+        /// <param name="uid"></param>
+        public Links(string uid) : base("0")
         {
             Import(table, uid, fields);
             base.uid = uid;
+            data[0] = uid;
+            inDatabase = true;
         }
+
+        /// <summary>
+        /// For creating new link without and data yet
+        /// </summary>
+        /// <param name="layerUID"></param>
+        public Links(int layerUID) : base("0", layerUID)
+        {
+            FileManager f = new FileManager();
+            uid = f.GenUID().ToString();
+            data[0] = uid;
+
+        }
+
+        private void SetLayerUID()
+        {
+            layerUID = GetLayerUID(data[0]);
+        }
+
+        public void SetLayerUID(string uid)
+        {
+            layerUID = GetLayerUID(uid);
+
+            //Update function for database if not in it already
+            if (!inDatabase)
+            {
+
+            }
+
+
+        }
+        
+
+
         public new void New()
         {
             base.New();
@@ -170,8 +251,13 @@ namespace SpiderPad
             Delete(data[0]);
         }
 
-    }
+        public int[] GetConnected()
+        {
+            int[] NodeUids = { Convert.ToInt32(data[1]), Convert.ToInt32(data[2]) };
 
+            return NodeUids;
+        }
+    }
     public class NLUIDs : UIDs
     {
         protected new SqlManager.Tables table = SqlManager.Tables.NLUIDs;
@@ -179,8 +265,8 @@ namespace SpiderPad
         private string[] data = new string[3];
         public NLUIDs(string uid, int layerUID) : base(uid)
         {
-            string[] d = { uid, layerUID.ToString(), type.ToString() };
-            data = d;
+            string[] dat = { uid, layerUID.ToString(), type.ToString() };
+            data = dat;
         }
         public NLUIDs(string uid) : base(uid)
         {
@@ -188,7 +274,29 @@ namespace SpiderPad
             data = d;
         }
 
+        public NLUIDs() : base("0")
+        {
+            FileManager f = new FileManager();
+            uid = f.GenUID().ToString();
+            data[0] = uid;
+        }
+
+        protected string GetLayerUID(string uid)
+        {
+            
+            SqlCommand cmd = new SqlCommand(sql.Read(table, fields[0], uid), conn);
+            conn.Open();
+            SqlDataReader reader = cmd.ExecuteReader();
+            reader.Read();
+            return reader.GetString(1);
+        }
+
         
+        protected void Update(string newUID)
+        {
+            
+        }
+
         public new void New()
         {
             //data redeclared here because it will not propogate correctly otherwise
@@ -224,6 +332,7 @@ namespace SpiderPad
         {
             Import(table, uid, fields);
             base.uid = uid;
+            data[0] = uid;
         }
 
         public new void New()
