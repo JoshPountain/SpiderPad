@@ -95,7 +95,7 @@ namespace SpiderPad
         public Nodes(string uid) : base("0")
         {
             //For when in database already
-            Import(table, uid, fields);
+            data = Import(table, uid, fields);
             base.uid = uid;
             inDatabase = true;
             setup();
@@ -142,11 +142,11 @@ namespace SpiderPad
             type = SqlManager.Tables.Nodes;
         }
 
-        public string[] Import()
+        /*public string[] Import()
         {
             data = Import(table, uid, fields);
             return data;
-        }
+        }*/
 
         public int[] GetPos()
         {
@@ -195,14 +195,14 @@ namespace SpiderPad
         /// <param name="uid"></param>
         public Links(string uid) : base("0")
         {
-            Import(table, uid, fields);
+            data = Import(table, uid, fields);
             base.uid = uid;
             data[0] = uid;
             inDatabase = true;
         }
 
         /// <summary>
-        /// For creating new link without and data yet
+        /// For creating new link without any data yet
         /// </summary>
         /// <param name="layerUID"></param>
         public Links(int layerUID) : base("0", layerUID)
@@ -328,9 +328,13 @@ namespace SpiderPad
             type = SqlManager.Tables.Layers;
         }
 
+        /// <summary>
+        /// Import layer from database
+        /// </summary>
+        /// <param name="uid"></param>
         public Layers(string uid) : base("0")
         {
-            Import(table, uid, fields);
+            data = Import(table, uid, fields);
             base.uid = uid;
             data[0] = uid;
         }

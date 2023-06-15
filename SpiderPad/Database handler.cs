@@ -123,7 +123,6 @@ namespace SpiderPad
             conn.ConnectionString = f.GetConnentionString();
             conn.Open();
             SqlDataReader reader = cmd.ExecuteReader();
-            //reader = cmd.ExecuteReader();
             List<int> ids = new List<int>();
             List<string> types = new List<string>();
             
@@ -148,11 +147,11 @@ namespace SpiderPad
                 {
                     case "Nodes":
                         //"ids[i]" must be layer uid here
-                        Nodes n = new Nodes(ids[i]);
+                        Nodes n = new Nodes(ids[i].ToString());
                         web.AddNode(n);
                         break;
                     case "Links":
-                        Links l = new Links(ids[i]);
+                        Links l = new Links(ids[i].ToString());
                         web.AddLink(l);
                         break;
                     case "Layers":
