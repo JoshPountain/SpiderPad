@@ -154,14 +154,16 @@ namespace SpiderPad
             return pos;
         }
 
-
-        public new void New()
+        /// <summary>
+        /// Saves node to database
+        /// </summary>
+        public new void Save()
         {
             if (inDatabase)
             {
                 return;
             }
-            base.New();
+            base.Save();
             SqlCommand cmd = new SqlCommand(sql.Insert(table, fields, data), conn);
             conn.Open();
             cmd.ExecuteNonQuery();
@@ -232,10 +234,12 @@ namespace SpiderPad
         }
         
 
-
-        public new void New()
+        /// <summary>
+        /// Saves link to database
+        /// </summary>
+        public new void Save()
         {
-            base.New();
+            base.Save();
             SqlCommand cmd = new SqlCommand(sql.Insert(table, fields, data), conn);
             conn.Open();
             cmd.ExecuteNonQuery();
@@ -297,11 +301,14 @@ namespace SpiderPad
             
         }
 
-        public new void New()
+        /// <summary>
+        /// Saves to NLUID database
+        /// </summary>
+        public new void Save()
         {
             //data redeclared here because it will not propogate correctly otherwise
             data[2] = type.ToString();
-            base.New();
+            base.Save();
             SqlCommand cmd = new SqlCommand(sql.Insert(table, fields, data), conn);
             conn.Open();
             cmd.ExecuteNonQuery();
@@ -339,9 +346,12 @@ namespace SpiderPad
             data[0] = uid;
         }
 
-        public new void New()
+        /// <summary>
+        /// Saves layer to database
+        /// </summary>
+        public new void Save()
         {
-            base.New();
+            base.Save();
             SqlCommand cmd = new SqlCommand(sql.Insert(table, fields, data), conn);
             conn.Open();
             cmd.ExecuteNonQuery();
@@ -383,7 +393,7 @@ namespace SpiderPad
 
         }
 
-        public void New()
+        public void Save()
         {
             data[1] = type.ToString();
             SqlCommand cmd = new SqlCommand(sql.Insert(table, fields, data), conn);

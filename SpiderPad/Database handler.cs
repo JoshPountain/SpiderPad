@@ -27,24 +27,36 @@ namespace SpiderPad
             // n.Import("2");
             // Console.WriteLine("Done");
             Layers l = new Layers("6", "DemoLayer1", 1);
-            l.New();
+            l.Save();
             Nodes[] n = new Nodes[5];
             for (int i = 0; i < 5; i++) 
             {
                 n[i] = new Nodes(i.ToString(), 6, i, i, $"DEMO{i}", $"DEMO{i}");
-                n[i].New();
+                n[i].Save();
             }
             Links link = new Links("7", 6, 0, 1, "DemoLink");
-            link.New();
+            link.Save();
             
         }
 
+        public void TestInitialization()
+        {
+            //save current database contents
+            var content = Import();
+            //Wipe database
+            WipeDatabase();
+            //Create blank component instances to then have auto UID assignment and then populate with old data
+            foreach (Nodes n in content.Nodes())
+            {
 
+            }
+
+        }
 
         public void TestLinks() 
         {
             Links link = new Links("7", 6, 2, 1, "DemoLink");
-            link.New();
+            link.Save();
             //link.Delete();
         }
 
@@ -76,16 +88,14 @@ namespace SpiderPad
             Import();
         }
 
-        public void WipeDatabase(bool AreYouSure, bool ReallySure)
+        /// <summary>
+        /// WARNING! Wipes the database
+        /// </summary>
+        /// <param name="AreYouSure"></param>
+        /// <param name="ReallySure"></param>
+        public void WipeDatabase()
         {
-            if (!AreYouSure)
-            {
-                return;
-            }
-            if (!ReallySure)
-            {
-                return;
-            }
+            
             LocalStorage comp = Import();
             List<Nodes> n = comp.Nodes();
             List<Links> l = comp.Links();
