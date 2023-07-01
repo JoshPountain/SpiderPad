@@ -90,7 +90,8 @@ namespace SpiderPad
             //handler.TestSetup();
             //handler.TestImport();
             //handler.TestDelete();
-            handler.TestInitialization();
+            //handler.TestInitialization();
+            handler.TestUpdate();
 
 
             //Testing read functionality of sql class and shit
@@ -110,7 +111,7 @@ namespace SpiderPad
 
 
 
-        public int GenUID()
+        public int GenUID(LocalStorage l)
         {
             int id = 0;
             List<int> taken = new List<int>();
@@ -138,6 +139,26 @@ namespace SpiderPad
             }
             catch (InvalidOperationException ex)
             {
+                try 
+                {
+                    foreach (Nodes n in l.Nodes())
+                    {
+                        taken.Add(int.Parse(n.data[0]));
+                    }
+                    foreach (Links n in l.Links())
+                    {
+                        taken.Add(int.Parse(n.data[0]));
+                    }
+                    foreach (Layers n in l.Layers())
+                    {
+                        taken.Add(int.Parse(n.data[0]));
+                    }
+
+                }
+                catch 
+                {
+
+                }
                 while (true)
                 {
                     if (taken.Contains(id))

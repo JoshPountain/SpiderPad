@@ -81,6 +81,15 @@ namespace SpiderPad
         public string[] data { get; protected set; } = new string[5];
 
         //nodes value here propogating down to the base class incorrectly
+        /// <summary>
+        /// For creating new node instance that will be added to database with all data already
+        /// </summary>
+        /// <param name="uid"></param>
+        /// <param name="layerUID"></param>
+        /// <param name="locationX"></param>
+        /// <param name="locationY"></param>
+        /// <param name="flag"></param>
+        /// <param name="text"></param>
         public Nodes(string uid, int layerUID, int locationX, int locationY, string flag, string text) : base(uid, layerUID)
         {
             string[] d = { uid, locationX.ToString(), locationY.ToString(), flag, text };
@@ -92,7 +101,7 @@ namespace SpiderPad
         /// For creating node instance that will get data from database
         /// </summary>
         /// <param name="uid"></param>
-        public Nodes(string uid) : base("0")
+        public Nodes(string uid, int layerUID) : base("0", layerUID)
         {
             //For when in database already
             data = Import(table, uid, fields);
@@ -122,6 +131,7 @@ namespace SpiderPad
         public void Update() 
         {
             SqlCommand cmd = new SqlCommand(sql.Update(table, fields, data, "UID", uid), conn);
+
             conn.Open();
             cmd.ExecuteNonQuery();
             conn.Close();
@@ -184,6 +194,15 @@ namespace SpiderPad
         string layerUID;
         protected bool inDatabase = false;
         public string[] data { get; private set; } = new string[4];
+
+        /// <summary>
+        /// For creating new link instance that will be added to database with all data already
+        /// </summary>
+        /// <param name="uid"></param>
+        /// <param name="layerUID"></param>
+        /// <param name="n1uid"></param>
+        /// <param name="n2uid"></param>
+        /// <param name="text"></param>
         public Links(string uid, int layerUID, int n1uid, int n2uid, string text) : base(uid, layerUID)
         {
             string[] d = { uid, n1uid.ToString(), n2uid.ToString(), text };
@@ -255,6 +274,15 @@ namespace SpiderPad
             Delete(data[0]);
         }
 
+        public void Update()
+        {
+            SqlCommand cmd = new SqlCommand(sql.Update(table, fields, data, "UID", data[0]), conn);
+
+            conn.Open();
+            cmd.ExecuteNonQuery();
+            conn.Close();
+        }
+
         public int[] GetConnected()
         {
             int[] NodeUids = { Convert.ToInt32(data[1]), Convert.ToInt32(data[2]) };
@@ -278,12 +306,12 @@ namespace SpiderPad
             data = d;
         }
 
-        public NLUIDs() : base("0")
+        /*public NLUIDs() : base("0")
         {
             FileManager f = new FileManager();
             uid = f.GenUID().ToString();
             data[0] = uid;
-        }
+        }*/
 
         protected string GetLayerUID(string uid)
         {
@@ -375,7 +403,16 @@ namespace SpiderPad
             Delete(data[0]);
         }
 
-        
+        public void Update()
+        {
+            SqlCommand cmd = new SqlCommand(sql.Update(table, fields, data, "LayerUID", data[0]), conn);
+
+            conn.Open();
+            cmd.ExecuteNonQuery();
+            conn.Close();
+        }
+
+
     }
 
     public class UIDs : WebData

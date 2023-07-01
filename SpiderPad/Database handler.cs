@@ -19,6 +19,51 @@ namespace SpiderPad
         }
 
 
+        public void TestUpdate()
+        {
+            Nodes n = new Nodes("0",1000, 420, 69, "intup", "rlintup");
+            n.Update();
+            Links l = new Links("7", 1000, 1, 2, "IntUpdated");
+            l.Update();
+            Layers lay = new Layers("6", "UpLayer", 1);
+            lay.Update();
+
+        }
+
+    
+        public void TestUpdatee()
+        {
+            //get instance of database
+            LocalStorage db = Import();
+            Nodes n = db.Nodes()[0];
+            
+            //get uid to identify node to update
+            string uid = n.data[0];
+            //rewrite data
+            SqlManager sql = new SqlManager();
+
+            //  Fields to update
+            List<string> fields = new List<string>();
+            //      Not including uid in fields
+            
+            for(int i = 1; i < n.fields.Length; i++)
+            {
+                fields.Add(n.fields[i]);
+            }
+
+            string[] passingFields = fields.ToArray();
+
+            //  Values to update to
+            string[] values = { "69", "420", "updated", "updated" };
+            
+            string query = sql.Update(SqlManager.Tables.Nodes, passingFields, values, n.fields[0], n.data[0]);
+            SqlCommand cmd = new SqlCommand(query, conn);
+            
+            conn.Open();
+            cmd.ExecuteNonQuery();
+            conn.Close();
+            //compare
+        }
         public void TestSetup()
         {
             //Testing read functionality of sql class and shit
@@ -46,9 +91,11 @@ namespace SpiderPad
             //Wipe database
             WipeDatabase();
             //Create blank component instances to then have auto UID assignment and then populate with old data
+
+
             foreach (Nodes n in content.Nodes())
             {
-
+                
             }
 
         }

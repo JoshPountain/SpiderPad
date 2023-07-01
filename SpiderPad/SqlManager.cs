@@ -100,17 +100,26 @@ namespace SpiderPad
             //conn.Close();
         }
 
-        public string Update(Tables table, string[] fields, string[] values, string condition, string uid)
+        /// <summary>
+        /// 'UPDATE [dbo].[#table] SET [#field1] = #value1, [#field2] = #value2,... WHERE [#condition] = #uid'
+        /// </summary>
+        /// <param name="table"></param>
+        /// <param name="fields"></param>
+        /// <param name="values"></param>
+        /// <param name="condition"></param>
+        /// <param name="uid"></param>
+        /// <returns></returns>
+        public string Update(Tables table, string[] fields, string[] values, string condition, string accept)
         {
 
             //Untested copilot generated code
-            string query = $"UPDATE [dbo].[{table}] SET [{fields[0]}] = {values[0]}";
+            string query = $"UPDATE [dbo].[{table}] SET {fields[0]} = {values[0]}";
 
             for (int i = 1; i < fields.Length; i++)
             {
-                query += $", [{fields[i]}] = {values[i]}";
+                query += $", {fields[i]} = '{values[i]}'";
             }
-            query += $" WHERE [{condition}] = {uid}";
+            query += $" WHERE {condition} = '{accept}'";
             return query;
         }
 
